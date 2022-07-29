@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { toast } from "react-hot-toast";
+import Swal from 'sweetalert2'
 import {  Toaster } from "react-hot-toast";
 import axios from "axios";
 import baseUrl from '../Service/BaseUrl';
@@ -21,15 +22,31 @@ export const Cliente = () => {
         }
     }
 
-    const onDeleteUser = async(id) =>{
-        if(window.confirm("are you sure that you wanted to delete that user record")){
-          const resp = await axios.delete(`${url}clientes/${id}`);
-          if(resp.status ===200){
-            // console.log("se ha eliminado");
-            toast.success('Se ha guardado');
-            getCliente();
-          }
-        }
+    //Menssage
+    const Menssage = (id) =>{
+        Swal.fire({
+            title: "¿estas seguro?",
+            text: "Una ves eliminado ya no se puede recuperar",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'eliminar'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                deleteClient(id)
+            }
+
+        })
+    }
+
+    // eliminar
+    const deleteClient = async (id) => {
+        await axios.delete(`${url}clientes/${id}`);
+        getCliente();
+        toast.success('Borrado Exitosamente!!!');
     }
 
   return (
@@ -72,7 +89,7 @@ export const Cliente = () => {
                                 <button className="btn btn-outline-warning mx-1">Editar</button>
                             </Link>
                             
-                            <button className="btn btn-outline-danger mx-1" onClick={() => onDeleteUser(item.id)} >Eliminar</button>
+                            <button className="btn btn-outline-danger mx-1" onClick={() => Menssage(item.id)} >Eliminar</button>
                         </td>
                     </tr>
                 )})

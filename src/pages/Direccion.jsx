@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, } from 'react-router-dom';
-import { Toaster, toast } from "react-hot-toast";
-import baseUrl from '../Service/BaseUrl';
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
+import Swal from 'sweetalert2'
+import baseUrl from '../Service/BaseUrl';
+
 
 export const Direccion = () => {
 
@@ -26,15 +28,6 @@ export const Direccion = () => {
     //info de direcciones
     const [data, setData] = useState([]);
     
-    // eliminar
-    const onDeleteAddress = async(idAddress) =>{
-        if(window.confirm("¿Esta Seguro Que Desea Borrar Este Registro?")){
-          const resp = await axios.delete(`${url}direcciones/${idAddress}`);
-          if(resp.status ===200){
-            getIdDireccion();
-          }
-        }
-    }
 
     //guardar
     const addAddress = async ( data ) =>{
@@ -79,6 +72,36 @@ export const Direccion = () => {
             toast.success('Se ha Actualizado');
         }
     }
+
+
+    //Menssage
+    const Menssage = (idAddress) =>{
+        Swal.fire({
+            title: "¿estas seguro?",
+            text: "Una ves eliminado ya no se puede recuperar",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'eliminar'
+        }).then((result) => {
+ 
+            if (result.isConfirmed) {
+                deleteAddress(idAddress)
+            }
+ 
+        })
+    }
+
+        // eliminar
+    const deleteAddress = async (idAddress) => {
+        await axios.delete(`${url}direcciones/${idAddress}`);
+        getIdDireccion();
+        toast.success('Borrado Exitosamente!!!');
+    }
+
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -174,7 +197,7 @@ export const Direccion = () => {
                                     <button className='btn btn-outline-warning mx-1' onClick={() => SearchAddress(item.id)}>Editar</button>
                                 </div>
                                 <div className='btn-group'>
-                                    <button className='btn btn-outline-danger mx-1' onClick={() => onDeleteAddress(item.id)}>Borrar</button>
+                                    <button className='btn btn-outline-danger mx-1' onClick={() => Menssage(item.id)}>Borrar</button>
                                 </div>
                             </div>
                         </div>
