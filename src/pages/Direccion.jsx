@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, } from 'react-router-dom';
+import { Toaster, toast } from "react-hot-toast";
 import baseUrl from '../Service/BaseUrl';
 import axios from "axios";
 
@@ -40,6 +41,7 @@ export const Direccion = () => {
         const resp = await axios.post(`${url}direcciones`, data);
         if(resp.status === 200){
             getIdDireccion();
+            toast.success('Se ha guardado');
         }
     }
 
@@ -74,6 +76,7 @@ export const Direccion = () => {
         const resp = await axios.put(`${url}direcciones/${idAddress}`, data);
         if(resp.status === 200){
             getIdDireccion();
+            toast.success('Se ha Actualizado');
         }
     }
 
@@ -179,6 +182,10 @@ export const Direccion = () => {
                 })
            }
         </div>
+
+        <Toaster
+            position='bottom-left'
+        />
     </div>
   )
 }

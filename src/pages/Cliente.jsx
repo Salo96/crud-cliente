@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import baseUrl from '../Service/BaseUrl';
 import { Link } from 'react-router-dom';
+import { toast } from "react-hot-toast";
+import {  Toaster } from "react-hot-toast";
 import axios from "axios";
+import baseUrl from '../Service/BaseUrl';
 
 export const Cliente = () => {
 
@@ -23,7 +25,8 @@ export const Cliente = () => {
         if(window.confirm("are you sure that you wanted to delete that user record")){
           const resp = await axios.delete(`${url}clientes/${id}`);
           if(resp.status ===200){
-            console.log("se ha eliminado");
+            // console.log("se ha eliminado");
+            toast.success('Se ha guardado');
             getCliente();
           }
         }
@@ -77,6 +80,10 @@ export const Cliente = () => {
         </tbody>
 
        </table>
+
+       <Toaster
+            position='bottom-left'
+        />
     
     </div>
   )

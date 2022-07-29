@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import {  toast } from "react-hot-toast";
 import baseUrl from '../Service/BaseUrl';
 
 const initialstate = {
@@ -36,7 +37,7 @@ export const AddEdit = () => {
         const resp = await axios.post(`${url}clientes`, data);
         if(resp.status === 200){
            
-            console.log("se ha guardado");
+            toast.success('Se ha guardado');
         }
         navigate("/");
     }
@@ -44,7 +45,7 @@ export const AddEdit = () => {
     const updateUser = async ( data, id ) =>{
         const resp = await axios.put(`${url}clientes/${id}`, data);
         if(resp.status === 200){
-          console.log("se ha actualizado");
+            toast.success('Se ha actualizado');
         }
         navigate("/");
     }
@@ -132,6 +133,8 @@ export const AddEdit = () => {
             </div>
 
         </form>
+
+
 
     </div>
   )

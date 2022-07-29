@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, } from 'react-router-dom';
-import baseUrl from '../Service/BaseUrl';
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
+import Swal from 'sweetalert2'
+import baseUrl from '../Service/BaseUrl';
+
 
 export const Documento = () => {
 
@@ -39,17 +42,35 @@ export const Documento = () => {
         const resp = await axios.post(`${url}documentos`, data);
         if(resp.status === 200){
             getIdDocumentos();
+            toast.success('Se ha guardado');
         }
     }
 
-    // eliminar
-    const onDeleteDocumento = async(idDocumento) =>{
-        if(window.confirm("¿Esta Seguro Que Desea Borrar Este Registro?")){
-            const resp = await axios.delete(`${url}documentos/${idDocumento}`);
-            if(resp.status ===200){
-                getIdDocumentos();
+    //Menssage
+    const Menssage = (idDocumento) =>{
+       Swal.fire({
+            title: "¿estas seguro?",
+            text: "Una ves eliminado ya no se puede recuperar",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'eliminar'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                deleteDocumento(idDocumento)
             }
-        }
+
+        })
+    }
+
+    // eliminar
+    const deleteDocumento = async (idDocumento) => {
+            await axios.delete(`${url}documentos/${idDocumento}`);
+            getIdDocumentos();
+            toast.success('Borrado Exitosamente!!!');
     }
 
     //obtener los data
@@ -62,7 +83,7 @@ export const Documento = () => {
 
     //buscar el documento
     const SearchIdDocumento = async ( idDocumento ) => {
-        console.log(`id del doc. ${idDocumento}`);
+        //console.log(`id del doc. ${idDocumento}`);
         setidDocumento(idDocumento, idDocumento)
         const resp = await axios.get(`${url}documentos/${idDocumento}`);
         if(resp.status === 200){
@@ -74,6 +95,7 @@ export const Documento = () => {
         const resp = await axios.put(`${url}documentos/${idDocumento}`, data);
         if(resp.status === 200){
             getIdDocumentos();
+            toast.success('Se ha Actualizado');
         }
     }
 
@@ -157,7 +179,7 @@ export const Documento = () => {
                                     <button className='btn btn-outline-warning mx-1' onClick={() => SearchIdDocumento(item.id) }>Editar</button>
                                 </div>
                                 <div className='btn-group'>
-                                    <button className='btn btn-outline-danger mx-1' onClick={() => onDeleteDocumento(item.id)}>Borrar</button>
+                                    <button className='btn btn-outline-danger mx-1' onClick={() => Menssage(item.id)}>Borrar</button>
                                 </div>
                             </div>
                         </div>
@@ -165,12 +187,13 @@ export const Documento = () => {
                     )
                 })
             }
-            
-
-
-                    
-              
+     
         </div>
+
+
+        <Toaster
+            position='bottom-left'
+        />
     </div>
   )
 }
